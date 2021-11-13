@@ -89,4 +89,11 @@ CREATE TABLE raw_timesheets(
 We use all VARCHAR(255) because ... 
 
 # Add data into the raw table
- 
+
+Read the source file and populate the data into the raw table.
+
+# Archive all the data from raw tables
+After create the archive table for employees and timesheets. We need to archive the data from the raw table to respective archive table. 
+
+# Schema 
+![Schema](./Schema.png)

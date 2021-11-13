@@ -89,6 +89,41 @@ def truncate_table(table_name, cur, con):
   cur.execute(sql)
   con.commit()
 
+def archive_employee_data(filename, scon, scur, dcon, dcur):
+  emp_sql = "SELECT * FROM raw_employees"
+  scur.execute(emp_sql)
+  employees = scur.fetchall()
+
+  employee_sql="""
+    INSERT INTO archive_employees (employee_id,first_name,last_name,department_id,department_name,manager_employee_id,employee_role,salary,hire_date,terminated_date,terminated_reason,dob,fte,location, filename) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+
+  for employee in employees:
+    row = list(employee)
+    row.append(filename)
+    row = tuple(row)
+
+    dcur.execute(employee_sql, row)
+    dcon.commit()
+    
+
+def archive_timesheet_data(filename, scon, scur, dcon, dcur):
+  timesheet_sql = "SELECT * FROM raw_timesheets"
+  scur.execute(timesheet_sql)
+  timesheets = scur.fetchall()
+
+  timesheets_sql="""
+    INSERT INTO archive_timesheets(employee_id,cost_center,punch_in_time,punch_out_time,punch_apply_date,hours_worked,paycode, filename) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
+  """
+
+  for timesheet in timesheets:
+    row = list(timesheet)
+    row.append(filename)
+    row = tuple(row)
+
+    dcur.execute(timesheets_sql, row)
+    dcon.commit()
+
 def main():
   con = connect()
   cur = con.cursor()
@@ -102,6 +137,14 @@ def main():
   extract_timesheet_data('csv', 'data/timesheet_2021_05_23.csv', cur, con)
   extract_timesheet_data('csv', 'data/timesheet_2021_06_23.csv', cur, con)
   extract_timesheet_data('csv', 'data/timesheet_2021_07_24.csv', cur, con)
+
+  # Archive data
+  dest_con = connect()
+  dest_cur = dest_con.cursor()
+
+  # Archive data
+  archive_employee_data('employee_2021_08_01.xml', con, cur, dest_con, dest_cur)
+  archive_timesheet_data('timesheet_2021_05_23.csv',  con, cur, dest_con, dest_cur)
 
   cur.close()
   con.close()
