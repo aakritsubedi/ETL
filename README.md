@@ -97,3 +97,5 @@ After create the archive table for employees and timesheets. We need to archive 
 
 # Schema 
 ![Schema](./Schema.png)
+
+Create the schema for above tables.

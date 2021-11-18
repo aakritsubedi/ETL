@@ -1,0 +1,4 @@
+CREATE TABLE dim_shift(
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255)
+);
