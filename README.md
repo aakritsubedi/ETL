@@ -99,3 +99,5 @@ After create the archive table for employees and timesheets. We need to archive 
 ![Schema](./Schema.png)
 
 Create the schema for above tables.
+
+Then, we can simply write SQL queries to populate data using our raw tables.
